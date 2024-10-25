@@ -1,5 +1,6 @@
 name: HorseTp-OG
-version: '2.0'
-main: me.barny1094875.horsetp.HorseTp
-api-version: 1.19
+version: '${version}'
+main: net.trueog.horsetpog.HorseTpOG
+auhors: [barny1094875, NotAlexNoyle]
+api-version: '${apiVersion}'
 depend: [WorldGuard]
