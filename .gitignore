@@ -15,6 +15,9 @@ atlassian-ide-plugin.xml
 
 # Compiled class file
 *.class
+.classpath
+.project
+.settings/
 
 # Log file
 *.log
