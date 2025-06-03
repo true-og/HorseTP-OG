@@ -1,5 +1,5 @@
 plugins {
-    id("com.gradleup.shadow") version "8.3.5" // Import shadow API.
+    id("com.gradleup.shadow") version "8.3.6" // Import shadow API.
     java // Tell gradle this is a java project.
     eclipse // Import eclipse plugin for IDE integration.
     kotlin("jvm") version "2.1.21" // Import kotlin jvm plugin for kotlin/java integration.
@@ -25,6 +25,9 @@ tasks.named<ProcessResources>("processResources") {
     filesMatching("plugin.yml") {
         expand(props)
     }
+    from("LICENSE") { // Bundle license into .jars.
+        into("/")
+    }
 }
 
 repositories {
@@ -35,28 +38,27 @@ repositories {
     }
     maven {
     	url = uri("https://maven.enginehub.org/repo/") // Get the WorldGuard API from EngineHub maven repository.
-
-	}
+    }
 }
 
 dependencies {
+    implementation("com.google.code.gson:gson:2.10.1")
     compileOnly("org.purpurmc.purpur:purpur-api:1.19.4-R0.1-SNAPSHOT") // Declare purpur API version to be packaged.
     compileOnly("io.github.miniplaceholders:miniplaceholders-api:2.2.3") // Import MiniPlaceholders API.
-    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.7")
-    implementation("com.google.code.gson:gson:2.10.1")
-    implementation(project(":libs:Utilities-OG"))
+    compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.0-SNAPSHOT") // Import WorldEdit.
+    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.9") { // Import WorldGuard but without its bundled WorldEdit.
+        exclude(group = "com.sk89q.worldedit")
+    }
+    compileOnly(project(":libs:Utilities-OG")) // Import TrueOG Network Utilities-OG API.
 }
 
-tasks.withType<AbstractArchiveTask>().configureEach { // Ensure reproducible builds.
+tasks.withType<AbstractArchiveTask>().configureEach { // Ensure reproducible .jars
     isPreserveFileTimestamps = false
     isReproducibleFileOrder = true
 }
 
 tasks.shadowJar {
-    archiveClassifier.set("") // Use empty string instead of null
-    from("LICENSE") {
-        into("/")
-    }
+    archiveClassifier.set("") // Use empty string instead of null.
     exclude("io.github.miniplaceholders.*") // Exclude the MiniPlaceholders package from being shadowed.
     minimize()
 }
