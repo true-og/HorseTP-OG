@@ -45,7 +45,7 @@ dependencies {
     compileOnly("io.github.miniplaceholders:miniplaceholders-api:2.2.3") // Import MiniPlaceholders API.
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.0-SNAPSHOT") // Import WorldEdit.
     compileOnly(
-        "com.sk89q.worldguard:worldguard-bukkit:7.0.9"
+        "com.sk89q.worldguard:worldguard-bukkit:7.0.8"
     ) { // Import WorldGuard but without its bundled WorldEdit.
         exclude(group = "com.sk89q.worldedit")
     }
