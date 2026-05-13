@@ -10,6 +10,7 @@ import java.util.List;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.trueog.horsetpog.HorseTpOG;
+import net.trueog.horsetpog.ProtectedActivity;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -33,9 +34,19 @@ public class OnPlayerTeleport implements Listener {
         // and the dismount event is guaranteed to have been called
         Bukkit.getScheduler().runTaskLater(HorseTpOG.getPlugin(), () -> {
 
+            Player player = event.getPlayer();
+
             // if the player did not have a vehicle prior to the teleport
             // ignore this handler
-            if (HorseTpOG.getVehicleCache().get(event.getPlayer()) == null) {
+            if (HorseTpOG.getVehicleCache().get(player) == null) {
+
+                return;
+
+            }
+
+            if (ProtectedActivity.isActive(player)) {
+
+                HorseTpOG.getVehicleCache().remove(player);
 
                 return;
 
@@ -52,7 +63,6 @@ public class OnPlayerTeleport implements Listener {
                                 event.getPlayer().getLocation().getY(), event.getPlayer().getLocation().getZ()));
                 event.getPlayer().teleport(event.getTo());
 
-                Player player = event.getPlayer();
                 // get the vehicle from the vehicle cache
                 Entity vehicle = HorseTpOG.getVehicleCache().get(player);
                 // remove the player and vehicle from the cache

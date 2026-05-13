@@ -4,3 +4,4 @@ main: net.trueog.horsetpog.HorseTpOG
 auhors: [barny1094875, NotAlexNoyle]
 api-version: '${apiVersion}'
 depend: [WorldGuard]
+softdepend: [Duels-OG, Spleef-OG]
