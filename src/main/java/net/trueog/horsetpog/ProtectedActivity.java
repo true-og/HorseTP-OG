@@ -38,13 +38,14 @@ public final class ProtectedActivity {
 
     private static boolean isInSpleef(Player player) {
 
-        if (!isPluginEnabled("Spleef-OG", "ArenaSpleef")) {
+        Plugin spleef = getEnabledPlugin("Spleef-OG");
+        if (spleef == null) {
 
             return false;
 
         }
 
-        return invoke(getSpleefMethod(), player);
+        return invoke(getSpleefMethod(spleef), player);
 
     }
 
@@ -61,11 +62,11 @@ public final class ProtectedActivity {
 
     }
 
-    private static Method getSpleefMethod() {
+    private static Method getSpleefMethod(Plugin spleef) {
 
         if (!spleefLookupComplete) {
 
-            spleefIsInSpleef = findMethod("org.battleplugins.arena.spleef.api.SpleefAPI", "isInSpleef");
+            spleefIsInSpleef = findMethod(spleef, "net.trueog.spleefog.api.SpleefAPI", "isInSpleef");
             spleefLookupComplete = true;
 
         }
@@ -79,6 +80,23 @@ public final class ProtectedActivity {
         try {
 
             Method method = Class.forName(className).getMethod(methodName, Player.class);
+            method.setAccessible(true);
+            return method;
+
+        } catch (ClassNotFoundException | NoSuchMethodException ignored) {
+
+            return null;
+
+        }
+
+    }
+
+    private static Method findMethod(Plugin plugin, String className, String methodName) {
+
+        try {
+
+            Method method = Class.forName(className, true, plugin.getClass().getClassLoader()).getMethod(methodName,
+                    Player.class);
             method.setAccessible(true);
             return method;
 
@@ -124,6 +142,13 @@ public final class ProtectedActivity {
         }
 
         return false;
+
+    }
+
+    private static Plugin getEnabledPlugin(String name) {
+
+        Plugin plugin = Bukkit.getPluginManager().getPlugin(name);
+        return plugin != null && plugin.isEnabled() ? plugin : null;
 
     }
 
