@@ -54,7 +54,6 @@ dependencies {
     ) { // Import WorldGuard but without its bundled WorldEdit.
         exclude(group = "com.sk89q.worldedit")
     }
-    compileOnlyApi(project(":libs:Utilities-OG")) // Import TrueOG Network Utilities-OG Java API (from source).
 }
 
 /* ---------------------- Reproducible jars ---------------------------- */
